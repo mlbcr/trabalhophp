@@ -1,0 +1,82 @@
+<?php
+require_once("../includes/trava.php"); 
+require_once("../config/database.php");
+
+include("../includes/header.php");
+
+$id_logado = $_SESSION["usuario_id"];
+
+$sql = "SELECT posts.*, usuarios.username AS autor_username 
+        FROM posts 
+        INNER JOIN usuarios ON posts.usuario_id = usuarios.id 
+        ORDER BY posts.id DESC";
+
+$resultado = mysqli_query($conn, $sql);
+?>
+
+<main class="conteudo-admin">
+    <div class="topo-pagina-atualizada">
+        <div>
+            <div class="user-badge">
+                <div class="user-avatar">
+                    <?= strtoupper(substr($_SESSION["usuario_nome"], 0, 1)); ?>
+                </div>
+                <span>Olá, <strong><?= htmlspecialchars($_SESSION["usuario_nome"]); ?></strong></span>
+                <span class="divider">•</span>
+                <a href="../processes/logout.php" class="btn-logout" title="Sair do sistema">
+                    <span>Sair</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                </a>
+            </div>
+            <h2>Feed da Comunidade</h2>
+            <p>Explore as últimas publicações dos membros do blog.</p>
+        </div>
+        
+        <a href="criar-post.php" class="botao-primario acao-novo-artigo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Escrever Artigo
+        </a>
+    </div>
+
+    <div class="posts-grid">
+        <?php if (mysqli_num_rows($resultado) == 0): ?>
+            <div class="card-formulario-vazio">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+                <p>Nenhum artigo foi publicado na comunidade ainda.</p>
+                <a href="criar-post.php" class="links-uteis" style="color: #3b82f6; font-size: 14px; font-weight: 500; margin-top: 8px; display: inline-block;">Seja o primeiro a escrever →</a>
+            </div>
+        <?php endif; ?>
+
+        <?php while ($post = mysqli_fetch_assoc($resultado)) : ?>
+            <div class="post-card">
+                <div class="post-card-body">
+                    <div class="post-header-info">
+                        <span class="post-autor">@<?= htmlspecialchars($post['autor_username']); ?></span>
+                        <span class="post-meta"><?= date('d/m/Y', strtotime($post['data_publicacao'])); ?></span>
+                    </div>
+                    
+                    <h3 class="post-titulo"><?= htmlspecialchars($post['titulo']); ?></h3>
+                    <p class="post-resumo"><?= htmlspecialchars($post['resumo']); ?></p>
+                </div>
+                
+                <div class="post-card-acoes">
+                    <a href="visualizar-post.php?id=<?= $post['id']; ?>" class="btn-acao btn-ver">
+                        Visualizar
+                    </a>
+
+                    <!-- REGRA DA COMUNIDADE: Botões de Editar e Excluir só aparecem se o post for MEU -->
+                    <?php if ($post['usuario_id'] == $id_logado): ?>
+                        <a href="editar-post.php?id=<?= $post['id']; ?>" class="btn-acao btn-editar">
+                            Editar
+                        </a>
+                        <a href="excluir-post.php?id=<?= $post['id']; ?>" class="btn-acao btn-excluir" onclick="return confirm('Tem certeza que deseja excluir seu artigo?')">
+                            Excluir
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endwhile; ?>
+    </div>
+</main>
+
+<?php include("../includes/footer.php"); ?>
