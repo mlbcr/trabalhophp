@@ -46,6 +46,16 @@ $resultado = mysqli_query($conn, $sql);
                     
                     <h3 class="post-titulo"><?= htmlspecialchars($post['titulo']); ?></h3>
                     <p class="post-resumo"><?= htmlspecialchars($post['resumo']); ?></p>
+                    <?php if (!empty($post['tags'])): ?>
+                    <div class="post-tags" style="display: flex; flex-wrap: wrap; justify-content: flex-start; margin-top: 10px;">
+                        <?php 
+                        $lista_tags = explode(',', $post['tags']);
+                        foreach ($lista_tags as $tag): 
+                        if (!empty(trim($tag))): ?>
+                            <span class="tag-exibicao"><?= htmlspecialchars(ucfirst(trim($tag))); ?></span>
+                            <?php endif; endforeach; ?>
+                    </div>
+                    <?php endif; ?>
                 </div>
                 
                 <div class="post-card-acoes">
@@ -58,7 +68,7 @@ $resultado = mysqli_query($conn, $sql);
                         <a href="editar-post.php?id=<?= $post['id']; ?>" class="btn-acao btn-editar">
                             Editar
                         </a>
-                        <a href="excluir-post.php?id=<?= $post['id']; ?>" class="btn-acao btn-excluir" onclick="return confirm('Tem certeza que deseja excluir seu artigo?')">
+                        <a href="../processes/excluir-post.php?id=<?= $post['id']; ?>" class="btn-acao btn-excluir" onclick="return confirm('Tem certeza que deseja excluir seu artigo?')">
                             Excluir
                         </a>
                     <?php endif; ?>

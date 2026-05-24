@@ -17,6 +17,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim($_POST['nome'] ?? '');
     $biografia = trim($_POST['biografia'] ?? '');
     $data_nascimento = !empty($_POST['data_nascimento']) ? $_POST['data_nascimento'] : null;
+
+    if ($data_nascimento) {
+        // 1. Verifica se a data é real (formato AAAA-MM-DD)
+        $d = DateTime::createFromFormat('Y-m-d', $data_nascimento);
+        $data_valida = $d && $d->format('Y-m-d') === $data_nascimento;
+
+        // 2. Verifica se a data não é no futuro
+        $data_hoje = new DateTime();
+        $data_input = new DateTime($data_nascimento);
+
+        if (!$data_valida || $data_input > $data_hoje) {
+            $erro = "Data de nascimento inválida.";
+            $data_nascimento = $usuario['data_nascimento']; // Mantém a antiga em caso de erro
+        }
+    }
     $genero = trim($_POST['genero'] ?? '');
 
     if (empty($nome)) {
@@ -40,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $destino_foto = $diretorio_uploads . $nome_arquivo_foto;
             
             if (move_uploaded_file($_FILES['foto']['tmp_name'], $destino_foto)) {
-                $caminho_foto = $destino_foto;
+                $caminho_foto = "../uploads/" . $nome_arquivo_foto;
             }
         }
 
@@ -117,7 +132,12 @@ include("../includes/header.php");
 
             <div class="grupo-formulario">
                 <label for="data_nascimento">Data de Nascimento</label>
-                <input type="date" id="data_nascimento" name="data_nascimento" value="<?= htmlspecialchars($usuario['data_nascimento'] ?? '') ?>">
+                <input type="date" 
+                id="data_nascimento" 
+                name="data_nascimento" 
+                value="<?= htmlspecialchars($usuario['data_nascimento'] ?? '') ?>"
+                min="1900-01-01" 
+                max="<?= date('Y-m-d'); ?>">
             </div>
 
             <div class="grupo-formulario">

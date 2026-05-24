@@ -44,7 +44,6 @@ if ($stmt_email) {
 
 $senha_criptografada = password_hash($senha, PASSWORD_DEFAULT);
 
-$sql_insert = "INSERT INTO usuarios (nome, username, email, senate) VALUES (?, ?, ?, ?)";
 $sql_insert = "INSERT INTO usuarios (nome, username, email, senha) VALUES (?, ?, ?, ?)";
 $stmt_insert = mysqli_prepare($conn, $sql_insert);
 

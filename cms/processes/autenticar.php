@@ -16,7 +16,8 @@ if (empty($login_input) || empty($senha)) {
     exit;
 }
 
-$sql = "SELECT id, nome, senha FROM usuarios WHERE email = ? OR username = ? LIMIT 1";
+// CORREÇÃO 1: Adicionado 'username' e 'foto' no SELECT
+$sql = "SELECT id, nome, username, senha, foto FROM usuarios WHERE email = ? OR username = ? LIMIT 1";
 $stmt = mysqli_prepare($conn, $sql);
 
 if ($stmt) {
@@ -26,8 +27,11 @@ if ($stmt) {
     
     if ($user = mysqli_fetch_assoc($resultado)) {
         if (password_verify($senha, $user["senha"])) {
-            $_SESSION["usuario_id"] = $user["id"];
-            $_SESSION["usuario_nome"] = $user["nome"];
+            // CORREÇÃO 2: Salvando todas as informações necessárias na sessão
+            $_SESSION["usuario_id"]       = $user["id"];
+            $_SESSION["usuario_nome"]     = $user["nome"];
+            $_SESSION["usuario_username"] = $user["username"];
+            $_SESSION["usuario_foto"]     = $user["foto"]; 
             
             header("Location: ../admin/index.php");
             exit;
@@ -35,5 +39,6 @@ if ($stmt) {
     }
 }
 
+// Se o usuário não existir ou a senha estiver incorreta
 header("Location: ../login.php?erro=1");
 exit;

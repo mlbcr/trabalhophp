@@ -283,6 +283,24 @@
     line-height: 1.6;
 }
 
+.post-tags {
+    display: inline-block; /* Faz a tag respeitar o tamanho do texto */
+    background: #2563eb; 
+    padding: 2px 8px; 
+    border-radius: 12px; 
+    font-size: 11px; 
+    color: white;
+    margin-right: 5px;
+    font-weight: 500;
+    text-decoration: none; 
+    cursor: default;
+    white-space: nowrap;
+    width: auto !important; 
+    display: inline-block !important;
+    margin-right: 6px;
+    margin-bottom: 6px;
+}
+
 /* Ações internas dos Cards */
 .post-card-acoes {
     display: flex;
@@ -398,6 +416,42 @@
     }
 }
 
+.post-like {
+    background: #1e293b;          
+    border: 1px solid #334155;   
+    color: #94a3b8;          
+    padding: 8px 16px;
+    border-radius: 20px;      
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease; 
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;   
+}
+
+.post-like:hover {
+    background: #334155;
+    color: #f8fafc;
+    border-color: #475569;
+}
+
+.post-like:active {
+    transform: scale(0.95);      
+}
+
+.post-like.btn-like:hover {
+    color: #22c55e;              
+    border-color: #22c55e40;
+}
+
+.post-like.btn-dislike:hover {
+    color: #ef4444;     
+    border-color: #ef444440;
+}
+
+
 /* ==========================================================================
    8. PERFIL DO USUÁRIO
    ========================================================================== */
@@ -495,7 +549,7 @@
 }
 
 .botao-editar-perfil {
-    background-color: #ef4444;
+    background-color: #efa544;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
@@ -503,8 +557,8 @@
 }
 
 .perfil-detalhes-card {
-    background: #7dc0ff;
-    border: 1px solid #7dc0ff;
+    background: #3984ca;
+    border: 1px solid #799ec2;
     border-radius: 12px;
     padding: 20px;
     margin-top: 24px;
@@ -540,13 +594,13 @@
 }
 
 .perfil-valor {
-    color: #334155;
+    color: #222d3b;
     font-size: 15px;
 }
 
 .perfil-bio-texto {
-    color: #334155;
-    font-size: 14px;
+    color: #222d3b;
+    font-size: 17px;
     line-height: 1.6;
     margin: 0;
 }

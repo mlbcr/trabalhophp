@@ -12,6 +12,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 </head>
 
 <body>
@@ -21,6 +22,27 @@
     }
     
     include("topo.php"); ?>
+
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+<script>
+
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: { toolbar: '#toolbar' }
+    });
+
+    var form = document.querySelector('form');
+    form.onsubmit = function() {
+        var conteudoInput = document.querySelector('#conteudo-input');
+        
+        if (quill.getText().trim().length === 0) {
+            conteudoInput.value = ''; 
+        } else {
+            conteudoInput.value = quill.root.innerHTML; 
+        }
+    };
+</script>
 </body>
 
 <div class="layout-admin">
