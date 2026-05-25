@@ -90,6 +90,12 @@ date_default_timezone_set('America/Sao_Paulo');
     
 
 <article class="artigo-container" style="margin: 0; max-width: none;">
+
+        <?php if (isset($_GET['sucesso'])): ?>
+            <div style="background: #064e3b; color: #d1fae5; padding: 16px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #065f46;">
+                Artigo atualizado com sucesso!
+            </div>
+        <?php endif; ?>
         
         <header class="artigo-header" style="border-bottom: 1px solid #1e293b; margin-bottom: 24px; padding-bottom: 16px;">
             <div class="artigo-meta" style="color: #94a3b8; font-size: 14px; margin-bottom: 8px;">
@@ -187,7 +193,7 @@ date_default_timezone_set('America/Sao_Paulo');
     </article>
 
     <script>
-        function votar(post_id, tipo) {
+    function votar(post_id, tipo) {
         let formData = new FormData();
         formData.append('post_id', post_id);
         formData.append('tipo', tipo);
@@ -195,11 +201,18 @@ date_default_timezone_set('America/Sao_Paulo');
         fetch('../processes/votar.php', {
             method: 'POST',
             body: formData
-        }).then(() => {
-            location.reload(); // Recarrega para atualizar a barra de votos
-        });
-        }
-    </script>
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "sucesso") {
+                location.reload(); 
+            } else {
+                alert("Erro ao votar: " + data.mensagem);
+            }
+        })
+        .catch(error => console.error('Erro:', error));
+    }
+</script>
 
 </main>
 

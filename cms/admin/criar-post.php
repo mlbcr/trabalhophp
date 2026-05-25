@@ -2,7 +2,22 @@
 require_once("../includes/trava.php");
 require_once("../config/database.php");
 include("../includes/header.php");
+
+$erro_mensagem = "";
+if (isset($_GET['erro'])) {
+    if ($_GET['erro'] == 'campos_vazios') {
+        $erro_mensagem = "Por favor, preencha todos os campos do artigo.";
+    } elseif ($_GET['erro'] == 'db_falha') {
+        $erro_mensagem = "Ocorreu um erro ao salvar no banco. Tente novamente.";
+    }
+}
 ?>
+
+<?php if (!empty($erro_mensagem)): ?>
+    <div style="background: #7f1d1d; color: #fecaca; padding: 16px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #991b1b;">
+        <?= $erro_mensagem; ?>
+    </div>
+<?php endif; ?>
 
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Blogzin</title>
+    <title>Blogbox</title>
     <link rel="shortcut icon" href="assets/ico/icone.ico" type="image/x-icon">
     <link rel="stylesheet" href="/cms/assets/css/global.css">
     <link rel="stylesheet" href="/cms/assets/css/admin.css">

@@ -100,29 +100,42 @@ $eh_o_proprio_dono = ($id_perfil == $id_logado);
                     <a href="criar-post.php" class="botao-primario">Escrever Artigo</a>
                 <?php else: ?>
                     <a href="#" id="btn-seguir-acao" 
+                        data-id="<?= $id_perfil ?>" 
                         onclick="alternarSeguir(<?= $id_perfil ?>, '<?= $ja_segue ? 'deixar' : 'seguir' ?>'); return false;" 
                         class="<?= $ja_segue ? 'botao-secundario' : 'botao-primario' ?>">
                         <?= $ja_segue ? 'Deixar de Seguir' : 'Seguir' ?>
                     </a>
 
                     <script>
-                        function alternarSeguir(id, acao) {
-                        const btn = document.getElementById('btn-seguir-acao');
-    
-                        // Chama o seguir.php em segundo plano
-                        fetch(`../processes/seguir.php?id=${id}&acao=${acao}`)
-                        .then(() => {
-                            // Altera o estado visual instantaneamente
-                            if (acao === 'seguir') {
-                                btn.innerHTML = 'Deixar de Seguir';
-                                btn.className = 'botao-secundario';
-                                btn.setAttribute('onclick', `alternarSeguir(${id}, 'deixar'); return false;`);
+                    function alternarSeguir(id, acao) {
+                        let formData = new FormData();
+                        formData.append('id', id);
+                        formData.append('acao', acao);
+
+                        fetch('../processes/seguir.php', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === "sucesso") {
+                                let btn = document.querySelector(`[data-id="${id}"]`);
+                                
+                                // 1. Alternar texto
+                                btn.innerText = (data.acao === 'seguir') ? 'Deixar de seguir' : 'Seguir';
+                                
+                                // 2. Alternar classes de estilo (importante!)
+                                btn.classList.toggle('botao-primario');
+                                btn.classList.toggle('botao-secundario');
+                                
+                                // 3. Atualizar o onclick para a próxima ação
+                                let novaAcao = (data.acao === 'seguir') ? 'deixar' : 'seguir';
+                                btn.setAttribute('onclick', `alternarSeguir(${id}, '${novaAcao}'); return false;`);
                             } else {
-                                btn.innerHTML = 'Seguir';
-                                btn.className = 'botao-primario';
-                                btn.setAttribute('onclick', `alternarSeguir(${id}, 'seguir'); return false;`);
+                                console.error("Erro:", data.mensagem);
                             }
-                        });
+                        })
+                        .catch(error => console.error('Erro na requisição:', error));
                     }
                     </script>
                 <?php endif; ?>

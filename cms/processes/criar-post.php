@@ -16,7 +16,8 @@ $tags_array = $_POST['tags'] ?? [];
 $tags_string = implode(',', $tags_array); 
 
 if (empty($titulo) || empty($resumo) || empty($conteudo)) {
-    die("Preencha todos os campos.");
+    header("Location: ../admin/criar-post.php?erro=campos_vazios");
+    exit;
 }
 
 $data_atual = date("Y-m-d H:i:s");
@@ -46,5 +47,6 @@ if (mysqli_stmt_execute($stmt)) {
     header("Location: ../admin/visualizar-post.php?id=" . $novo_id);
     exit;
 } else {
-    die("Erro ao cadastrar post: " . mysqli_stmt_error($stmt));
+    header("Location: ../admin/criar-post.php?erro=db_falha");
+    exit;
 }
