@@ -6,6 +6,7 @@ include("../includes/header.php");
 
 $id_post = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
+// Se não encontrar o post, volta para a página principal
 if (!$id_post) {
     header("Location: index.php");
     exit;
@@ -32,6 +33,7 @@ if (!$post) {
     exit;
 }
 
+// Pega as informações do autor do post
 $sql_autor = "SELECT nome, foto, banner, biografia FROM usuarios WHERE id = ?";
 $stmt_autor = mysqli_prepare($conn, $sql_autor);
 mysqli_stmt_bind_param($stmt_autor, "i", $post['usuario_id']);
@@ -39,6 +41,7 @@ mysqli_stmt_execute($stmt_autor);
 $autor = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt_autor));
 mysqli_stmt_close($stmt_autor);
 
+// Pega os likes e dislikes do post
 $sql_votos = "SELECT 
     SUM(CASE WHEN tipo = 'like' THEN 1 ELSE 0 END) as total_likes,
     SUM(CASE WHEN tipo = 'dislike' THEN 1 ELSE 0 END) as total_dislikes
@@ -56,11 +59,11 @@ date_default_timezone_set('America/Sao_Paulo');
 ?>
 
 <style>
+    /* Garante que a customização do texto permaneça */
     .artigo-conteudo .ql-align-center { text-align: center; }
     .artigo-conteudo .ql-align-justify { text-align: justify; }
     .artigo-conteudo .ql-align-right { text-align: right; }
     
-    /* Caso queira garantir que negrito e itálico também apareçam corretamente */
     .artigo-conteudo strong { font-weight: bold; }
     .artigo-conteudo em { font-style: italic; }
     .artigo-conteudo u { text-decoration: underline; }
@@ -109,7 +112,7 @@ date_default_timezone_set('America/Sao_Paulo');
             $lista_tags = explode(',', $post['tags']);
             foreach ($lista_tags as $tag): 
             if (!empty($tag)): ?>
-                <span style="background: #2563eb; padding: 6px 10px; border-radius: 12px; font-size: 15px; color: white;">
+                <span style="background: #2563eb; padding: 6px 8px; border-radius: 12px; font-size: 15px; color: white; inline-block;">
                     <?= ucfirst($tag); ?>
                 </span>
             <?php endif; endforeach; ?>
@@ -154,6 +157,8 @@ date_default_timezone_set('America/Sao_Paulo');
             </form>
 
             <?php
+
+            // Lógica da seção de comentários e como ela mostra todos os comentários
             $sql_com = "SELECT c.*, u.nome, u.foto, u.username 
             FROM comentarios c 
             JOIN usuarios u ON c.usuario_id = u.id 
@@ -165,9 +170,9 @@ date_default_timezone_set('America/Sao_Paulo');
             $res_com = mysqli_stmt_get_result($stmt_com);
             
             while ($com = mysqli_fetch_assoc($res_com)): 
-    $foto_comentarista = !empty($com['foto']) ? htmlspecialchars($com['foto']) : null;
-    // Precisamos buscar o username também, então ajuste seu SELECT SQL acima para incluir 'u.username'
-?>
+            $foto_comentarista = !empty($com['foto']) ? htmlspecialchars($com['foto']) : null;
+            ?>
+
     <div style="display: flex; gap: 15px; margin-bottom: 20px; background: #334155; padding: 15px; border-radius: 12px;">
         <div style="width: 45px; height: 45px; border-radius: 50%; overflow: hidden; background: #2563eb; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; flex-shrink: 0;">
             <?php if ($foto_comentarista): ?>
@@ -193,26 +198,28 @@ date_default_timezone_set('America/Sao_Paulo');
     </article>
 
     <script>
-    function votar(post_id, tipo) {
-        let formData = new FormData();
-        formData.append('post_id', post_id);
-        formData.append('tipo', tipo);
 
-        fetch('../processes/votar.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === "sucesso") {
-                location.reload(); 
-            } else {
-                alert("Erro ao votar: " + data.mensagem);
-            }
-        })
-        .catch(error => console.error('Erro:', error));
-    }
-</script>
+        // Lógica para dar like e dislike
+        function votar(post_id, tipo) {
+            let formData = new FormData();
+            formData.append('post_id', post_id);
+            formData.append('tipo', tipo);
+
+            fetch('../processes/votar.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "sucesso") {
+                    location.reload(); 
+                } else {
+                    alert("Erro ao votar: " + data.mensagem);
+                }
+            })
+            .catch(error => console.error('Erro:', error));
+        }
+    </script>
 
 </main>
 

@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -17,21 +18,26 @@
 
 <body>
     <?php 
+
+    // Se o usuário não estiver logado, a sua sessão é iniciada
     if (session_status() === PHP_SESSION_NONE) {
     session_start();
     }
     
+    // O topo fica conectado ao header
     include("topo.php"); ?>
 
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
 <script>
 
+    // O Quill abaixo serve para fazer o editor de texto. Ele não possui limites e sempre começa vazio
     var quill = new Quill('#editor', {
         theme: 'snow',
         modules: { toolbar: '#toolbar' }
     });
 
+    // Envia o conteúdo para o campo oculto antes de enviar
     var form = document.querySelector('form');
     form.onsubmit = function() {
         var conteudoInput = document.querySelector('#conteudo-input');
@@ -44,5 +50,4 @@
     };
 </script>
 </body>
-
-<div class="layout-admin">
+</html>

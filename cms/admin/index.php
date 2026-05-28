@@ -6,6 +6,7 @@ include("../includes/header.php");
 
 $id_logado = $_SESSION["usuario_id"];
 
+// Adquire do banco de dados todos os posts que ele possui e suas informações e usa JOIN para pegar o nome do autor
 $sql = "SELECT posts.*, usuarios.username AS autor_username 
         FROM posts 
         INNER JOIN usuarios ON posts.usuario_id = usuarios.id 
@@ -29,6 +30,7 @@ $resultado = mysqli_query($conn, $sql);
 
     <div class="posts-grid">
         <?php if (mysqli_num_rows($resultado) == 0): ?>
+            <!-- Se não existirem posts no banco de dados -->
             <div class="card-formulario-vazio">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
                 <p>Nenhum artigo foi publicado na comunidade ainda.</p>
@@ -37,6 +39,7 @@ $resultado = mysqli_query($conn, $sql);
         <?php endif; ?>
 
         <?php while ($post = mysqli_fetch_assoc($resultado)) : ?>
+            <!-- O $post itera os posts no banco de dados enquanto você estiver na página -->
             <div class="post-card">
                 <div class="post-card-body">
                     <div class="post-header-info">
@@ -47,23 +50,27 @@ $resultado = mysqli_query($conn, $sql);
                     <h3 class="post-titulo"><?= htmlspecialchars($post['titulo']); ?></h3>
                     <p class="post-resumo"><?= htmlspecialchars($post['resumo']); ?></p>
                     <?php if (!empty($post['tags'])): ?>
-                    <div class="post-tags" style="display: flex; flex-wrap: wrap; justify-content: flex-start; margin-top: 10px;">
-                        <?php 
-                        $lista_tags = explode(',', $post['tags']);
-                        foreach ($lista_tags as $tag): 
-                        if (!empty(trim($tag))): ?>
-                            <span class="tag-exibicao"><?= htmlspecialchars(ucfirst(trim($tag))); ?></span>
-                            <?php endif; endforeach; ?>
-                    </div>
+                        <div class="post-tags">
+                            <?php 
+                            $lista_tags = explode(',', $post['tags']);
+                            foreach ($lista_tags as $tag): 
+                                $tag_limpa = trim($tag);
+                                if (!empty($tag_limpa)): ?>
+                                    <span class="tag-exibicao" >
+                                        <?= htmlspecialchars(ucfirst($tag_limpa)); ?>
+                                    </span>
+                                <?php endif; 
+                            endforeach; ?>
+                        </div>
                     <?php endif; ?>
                 </div>
-                
+
+                <!-- Botões de Editar e Excluir só aparecem se o post for do usuário logado. Do contrário, aparece apenas o Visualizar -->
                 <div class="post-card-acoes">
                     <a href="visualizar-post.php?id=<?= $post['id']; ?>" class="btn-acao btn-ver">
                         Visualizar
                     </a>
 
-                    <!-- REGRA DA COMUNIDADE: Botões de Editar e Excluir só aparecem se o post for MEU -->
                     <?php if ($post['usuario_id'] == $id_logado): ?>
                         <a href="editar-post.php?id=<?= $post['id']; ?>" class="btn-acao btn-editar">
                             Editar

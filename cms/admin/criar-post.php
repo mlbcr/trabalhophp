@@ -3,6 +3,7 @@ require_once("../includes/trava.php");
 require_once("../config/database.php");
 include("../includes/header.php");
 
+// Mensagem de erro para o caso de não preencher todos os campos
 $erro_mensagem = "";
 if (isset($_GET['erro'])) {
     if ($_GET['erro'] == 'campos_vazios') {
@@ -74,7 +75,7 @@ if (isset($_GET['erro'])) {
                 <label>Tags</label>
                 <div class="tags-container" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
                     <?php 
-                    $tags_lista = ['esporte', 'culinária', 'jogos', 'tecnologia', 'opinião', 'notícia', 'humor', 'life hack'];
+                    $tags_lista = ['esporte', 'culinária', 'jogos', 'tecnologia', 'opinião', 'notícia', 'humor', 'sugestão', 'life hack'];
                     foreach ($tags_lista as $tag): ?>
                     <label style="cursor: pointer;">
                         <input type="checkbox" name="tags[]" value="<?= $tag; ?>" style="display: none;">
@@ -87,7 +88,6 @@ if (isset($_GET['erro'])) {
             </div>
 
             <style>
-            /* Estilo para quando a tag for selecionada */
             input[type="checkbox"]:checked + .tag-botao {
             background: #2563eb !important;
             color: white !important;
@@ -100,6 +100,7 @@ if (isset($_GET['erro'])) {
 </main>
 
 <script>
+    // O Quill é o editor de texto para a criação de textos personalizados
     var quill = new Quill('#editor', {
         theme: 'snow',
         modules: { toolbar: '#toolbar' }
@@ -111,11 +112,11 @@ if (isset($_GET['erro'])) {
     form.onsubmit = function(event) {
         var conteudoInput = document.getElementById('conteudo-input');
         
-        // Pega o conteúdo (getText().trim() remove espaços vazios)
+        // Pega o conteúdo e remove o espaço vazio
         var textoLimpo = quill.getText().trim();
         
         if (textoLimpo === "") {
-            // Impede o envio do formulário
+            // Impede o envio do formulário se estiver vazio
             event.preventDefault(); 
             alert("Por favor, preencha o conteúdo do artigo.");
             return false;

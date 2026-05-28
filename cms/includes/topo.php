@@ -1,4 +1,5 @@
 <header class="header-global" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: #0f172a; border-bottom: 1px solid #1e293b;">
+    
     <a href="../admin/index.php" style="color: #94a3b8; text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 8px;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
         Início
@@ -7,13 +8,16 @@
     <div class="user-badge" style="display: flex; align-items: center; gap: 12px;">
         
         <div class="user-avatar" style="width: 36px; height: 36px; border-radius: 50%; overflow: hidden; background: #2563eb; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px;">
-    <?php if (!empty($_SESSION['usuario_foto'])): ?>
-        <img src="/cms/upload/<?= htmlspecialchars($_SESSION['usuario_foto']); ?>" 
-             style="width: 100%; height: 100%; object-fit: cover;">
-    <?php else: ?>
-        <?= isset($_SESSION["usuario_nome"]) ? strtoupper(substr($_SESSION["usuario_nome"], 0, 1)) : 'U'; ?>
-    <?php endif; ?>
-</div>
+            <?php 
+            // Verifica se a foto existe na sessão e a exibe
+            if (!empty($_SESSION['usuario_foto'])): ?>
+                <img src="/cms/upload/<?= htmlspecialchars($_SESSION['usuario_foto']); ?>" 
+                     style="width: 100%; height: 100%; object-fit: cover;">
+            <?php else: 
+                // Caso contrário, exibe a inicial do nome armazenado na sessão
+                echo isset($_SESSION["usuario_nome"]) ? strtoupper(substr($_SESSION["usuario_nome"], 0, 1)) : 'U'; 
+            endif; ?>
+        </div>
 
         <a href="../admin/perfil.php?u=<?= urlencode($_SESSION['usuario_username'] ?? ''); ?>" class="btn-perfil" style="text-decoration: none; color: #f8fafc;">
             <span>Olá, <strong><?= htmlspecialchars($_SESSION["usuario_nome"] ?? 'Visitante'); ?></strong></span>

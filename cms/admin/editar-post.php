@@ -14,6 +14,7 @@ mysqli_stmt_execute($stmt);
 $post = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
 mysqli_stmt_close($stmt);
 
+// Se não existir post, encaminha o usuário para a home
 if (!$post) {
     header("Location: index.php");
     exit;
@@ -74,6 +75,7 @@ if (!$post) {
 
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script>
+    // O Quill é o editor de texto para a criação de textos personalizados
     var quill = new Quill('#editor', {
         modules: { toolbar: '#toolbar' },
         theme: 'snow'

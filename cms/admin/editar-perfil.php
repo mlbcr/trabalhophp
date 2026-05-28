@@ -70,13 +70,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // 3. Atualiza os dados no banco
+        // 3. Atualiza os dados no banco e redireciona para perfil.php
         $sql_update = "UPDATE usuarios SET nome = ?, biografia = ?, data_nascimento = ?, genero = ?, foto = ?, banner = ? WHERE id = ?";
         $stmt_update = mysqli_prepare($conn, $sql_update);
         mysqli_stmt_bind_param($stmt_update, "ssssssi", $nome, $biografia, $data_nascimento, $genero, $caminho_foto, $caminho_banner, $id_logado);
         
         if (mysqli_stmt_execute($stmt_update)) {
-            $sucesso = "Seu perfil foi atualizado com sucesso!";
+            $_SESSION["usuario_nome"] = $nome;
+            $_SESSION["usuario_foto"] = $caminho_foto;
+            
+            header("Location: perfil.php");
+            exit;
         } else {
             $erro = "Ocorreu um erro ao atualizar o perfil. Tente novamente.";
         }

@@ -121,14 +121,11 @@ $eh_o_proprio_dono = ($id_perfil == $id_logado);
                             if (data.status === "sucesso") {
                                 let btn = document.querySelector(`[data-id="${id}"]`);
                                 
-                                // 1. Alternar texto
                                 btn.innerText = (data.acao === 'seguir') ? 'Deixar de seguir' : 'Seguir';
                                 
-                                // 2. Alternar classes de estilo (importante!)
                                 btn.classList.toggle('botao-primario');
                                 btn.classList.toggle('botao-secundario');
                                 
-                                // 3. Atualizar o onclick para a próxima ação
                                 let novaAcao = (data.acao === 'seguir') ? 'deixar' : 'seguir';
                                 btn.setAttribute('onclick', `alternarSeguir(${id}, '${novaAcao}'); return false;`);
                             } else {
@@ -172,7 +169,7 @@ $eh_o_proprio_dono = ($id_perfil == $id_logado);
                         <a href="visualizar-post.php?id=<?= $post['id']; ?>" class="btn-acao btn-ver">Visualizar</a>
                         <?php if ($post['usuario_id'] == $id_logado): ?>
                             <a href="editar-post.php?id=<?= $post['id']; ?>" class="btn-acao btn-editar">Editar</a>
-                            <a href="excluir-post.php?id=<?= $post['id']; ?>" class="btn-acao btn-excluir" onclick="return confirm('Tem certeza que deseja excluir seu artigo?')">Excluir</a>
+                            <a href="../processes/excluir-post.php?id=<?= $post['id']; ?>" class="btn-acao btn-excluir" onclick="return confirm('Tem certeza que deseja excluir seu artigo?')">Excluir</a>
                         <?php endif; ?>
                     </div>
                 </div>

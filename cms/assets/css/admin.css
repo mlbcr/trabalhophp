@@ -11,12 +11,10 @@
     padding: 40px;
 }
 
-/* Modificador opcional caso queira remover o padding apenas na página de perfil */
 .conteudo-admin.pagina-perfil {
     padding-top: 0;
 }
 
-/* Cards Base */
 .card-formulario, 
 .card-formulario-vazio {
     background: #111827;
@@ -97,7 +95,6 @@
     color: #94a3b8;
 }
 
-/* Badge do Usuário Conectado */
 .user-badge {
     display: flex;
     align-items: center;
@@ -284,7 +281,7 @@
 }
 
 .post-tags {
-    display: inline-block; /* Faz a tag respeitar o tamanho do texto */
+    display: inline-block;
     background: #2563eb; 
     padding: 2px 8px; 
     border-radius: 12px; 
@@ -301,7 +298,6 @@
     margin-bottom: 6px;
 }
 
-/* Ações internas dos Cards */
 .post-card-acoes {
     display: flex;
     border-top: 1px solid #1e293b;
@@ -508,7 +504,6 @@
     color: #fff;
 }
 
-/* Escopado para não quebrar o .user-avatar do cabeçalho da página */
 .perfil-info-wrapper .user-avatar {
     width: 120px;
     height: 120px;
